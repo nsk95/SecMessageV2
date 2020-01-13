@@ -1,0 +1,18 @@
+{
+    "name": "spyro/sec-messagev2",
+    "description": "Secure message and file sharing",
+    "type": "project",
+    "require": {
+        "smarty/smarty": "^3.1",
+        "monolog/monolog": "^2.0",
+        "filp/whoops": "^2.7",
+        "gabordemooij/redbean": "^5.4"
+    },
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Spyro",
+            "email": "ifdmmib@gmail.com"
+        }
+    ]
+}
