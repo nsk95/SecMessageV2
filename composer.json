@@ -6,7 +6,16 @@
         "smarty/smarty": "^3.1",
         "monolog/monolog": "^2.0",
         "filp/whoops": "^2.7",
-        "gabordemooij/redbean": "^5.4"
+        "gabordemooij/redbean": "^5.4",
+        "voku/anti-xss": "^4.1"
+    },
+    "autoload": {
+        "psr-4": {
+            "SecMessage\\": ["", "/public"],
+            "SecMessage\\Core\\": "core/",
+            "SecMessage\\Controller\\": "controller/",
+            "SecMessage\\Model\\": "model/"
+        }
     },
     "license": "MIT",
     "authors": [
