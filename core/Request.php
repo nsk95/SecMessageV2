@@ -1,33 +1,28 @@
 <?php
 
 namespace SecMessage\Core;
+use voku\helper\AntiXSS;
 
 class Request
 {
     private $get            = null;
     private $post           = null;
-    private $cookie         = null;
     private $route_params   = null;
     private $data           = null;
-    public function __construct(array $route_params)
+    private $xss            = null;
+    public function __construct($route_params)
     {
-
-        $antiXss = new \Voku\helper\AntiXSS();
-
-        foreach($route_params as $r)
-        {
-            
-        }
-
-        $this->route_params = $route_params;
-
-
+        $this->xss = new AntiXSS();
+        
+        $this->data['post']         = (!empty($_POST) ? ($this->post = $this->cleanXss($_POST)) : array()); 
+        $this->data['get']          = (!empty($_GET) ? ($this->get = $this->cleanXss($_GET)) : array()); 
+        $this->data['route_params'] = (!empty($route_params) ? ($this->route_params = $this->cleanXss($route_params)) : array()); 
     }
 
     /**
      * Get the value of post
      */ 
-    public function getPost()
+    public function getPost() :?array
     {
         return $this->post;
     }
@@ -35,26 +30,47 @@ class Request
     /**
      * Get the value of get
      */ 
-    public function getGet()
+    public function getGet() :?array
     {
         return $this->get;
     }
 
     /**
-     * Get the value of cookie
-     */ 
-    public function getCookie()
-    {
-        return $this->cookie;
-    }
-
-    /**
      * Get the value of route_params
      */ 
-    public function getRouteParams()
+    public function getRouteParams() :?array
     {
         return $this->route_params;
     }
 
-    
+    /**
+     * CSS cleaner
+     *
+     * @param mixed $data
+     * @return array
+     */
+    private function cleanXss($data) :array
+    {
+        $a_return = array();
+
+        if(is_array($data))
+        {
+            foreach($data as $key => $value)
+            {
+                if(is_array($value))
+                {
+                    $a_return[$this->xss->xss_clean($key)] = $this->cleanXss($value);
+                }                
+                else
+                {
+                    $a_return[$this->xss->xss_clean($key)] = $this->xss->xss_clean($value);
+                }
+            }
+        }
+        else
+        {
+            $a_return[$this->xss->xss_clean($key)] = $this->xss->xss_clean($value);
+        }
+        return $a_return;
+    }
 }

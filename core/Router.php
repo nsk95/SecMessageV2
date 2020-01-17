@@ -4,6 +4,7 @@ namespace SecMessage\Core;
 
 class Router 
 {
+    private $requestHandler     = null;
     private $controller         = null;
     private $method             = null;
     private $additionalParams   = array();
@@ -13,16 +14,19 @@ class Router
         'additional'    => NULL
     ); 
 
-    public function __construct($url) {
+    public function __construct($url) 
+    {
+        $this->url              = $this->parseUrl($url);
 
-        $url = $this->parseUrl($url);
         isset($url[0]) ? $this->routeParams['controller'] = $url[0] :  $this->routeParams['controller'] = 'index';
         isset($url[1]) ? $this->routeParams['action'] = $url[1] : $this->routeParams['action'] = 'index';
         isset($url[2]) ? $this->routeParams['additional'] = $url[2] : '';
 
+        $this->requestHandler   = new Request($this->routeParams);
+
         if($this->controllerExistAndSet($this->routeParams['controller']) && $this->methodExistAndSet($this->routeParams['action']))
         {
-            $action = str_replace('Action', '', $this->action);
+            $action = str_replace('Action', '', $this->method);
             $this->controller->$action();
         }
         else
@@ -62,7 +66,7 @@ class Router
                 return false;
             }
             $this->controller = "SecMessage\\Controller\\".$controllerName;
-            $this->controller = new $this->controller($this->routeParams);
+            $this->controller = new $this->controller($this->requestHandler);
             return true;
         }
         return false;
