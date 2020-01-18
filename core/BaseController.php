@@ -4,10 +4,15 @@ namespace SecMessage\Core;
 
 class BaseController
 {
-    private $smarty         = null;
+    
     private $em             = null;
-    private $render         = true;
+    
     private $request        = null;
+
+    private $messages       = null;
+
+    private $smarty         = null;
+    private $render         = true;
     private $js             = array();
     private $css            = array();
     private $jsUrl          = array();
@@ -18,6 +23,7 @@ class BaseController
         $this->initSmarty();
         $this->request  = $requestHandler;
         $this->params   = $this->request->getRouteParams();
+        $this->messages = SystemMessages::getInstance();
     }
 
     public function __call($name, $arg) :void
@@ -35,6 +41,7 @@ class BaseController
                     $this->smarty->assign('jsUrl', $this->jsUrl);
                     $this->smarty->assign('css', $this->css);
                     $this->smarty->assign('cssUrl', $this->cssUrl);
+                    $this->smarty->assign('messages', $this->messages->getMessages());
                     $this->smarty->display($this->params['controller'].'/'.$this->params['action'].'.tpl');
                 } 
                 catch (\Throwable $th) 
@@ -172,5 +179,13 @@ class BaseController
         $smarty->template_dir = __DIR__.'/../templates';
         $smarty->compile_dir = __DIR__.'/../tmp';
         $this->smarty = $smarty;
+    }
+
+    /**
+     * Get the value of messages
+     */ 
+    public function systemMessages()
+    {
+        return $this->messages;
     }
 }

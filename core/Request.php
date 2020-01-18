@@ -44,6 +44,14 @@ class Request
     }
 
     /**
+     * Get the value of data
+     */ 
+    public function getData()
+    {
+        return $this->data;
+    }
+
+    /**
      * CSS cleaner
      *
      * @param mixed $data
@@ -70,6 +78,11 @@ class Request
         else
         {
             $a_return[$this->xss->xss_clean($key)] = $this->xss->xss_clean($value);
+        }
+
+        if($this->xss->isXssFound() === true)
+        {
+            SystemMessages::getInstance()->setMessage('warning', 'XSS detection', 'xss attack detected.');
         }
         return $a_return;
     }

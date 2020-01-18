@@ -16,11 +16,10 @@ class Router
 
     public function __construct($url) 
     {
-        $this->url              = $this->parseUrl($url);
-
-        isset($url[0]) ? $this->routeParams['controller'] = $url[0] :  $this->routeParams['controller'] = 'index';
-        isset($url[1]) ? $this->routeParams['action'] = $url[1] : $this->routeParams['action'] = 'index';
-        isset($url[2]) ? $this->routeParams['additional'] = $url[2] : '';
+        $this->url                          = $this->parseUrl($url);
+        $this->routeParams['controller']    = (isset($this->url[0]) ? $this->url[0] : 'index');
+        $this->routeParams['action']        = (isset($this->url[1]) ? $this->url[1] : 'index');
+        $this->routeParams['additional']    = (isset($this->url[2]) ? $this->url[2] : '');
 
         $this->requestHandler   = new Request($this->routeParams);
 

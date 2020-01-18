@@ -6,13 +6,13 @@
 		<meta name="description" content="">
 		<meta name="author" content="">
   		<title>SecMessage by Spyro / nsk95</title>
-  		<link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet">
+  		<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
 		{if !empty($css)}
 			{foreach $css as $c}
 				{literal}
 					<style>
 				{/literal}
-						{$c}
+					{$c}
 				{literal}
 					</style>
 				{/literal}
@@ -42,3 +42,29 @@
 				</div>
 			</div>
 		</nav>
+		{if !empty($messages)}
+			<div class="position-absolute w-100 p-4 d-flex flex-column align-items-end">
+				<div class="w-25">
+					{foreach $messages as $m}
+						<div class="toast ml-auto sysmsg-{$m.type}" role="alert" data-delay="1000" data-autohide="false">
+							<div class="toast-header">
+								<strong class="mr-auto text-primary">{if !empty($m.title)}{$m.title}{else}{$m.type|ucfirst}{/if}</strong>
+								<button type="button" class="ml-2 mb-1 close" data-dismiss="toast" aria-label="Close">
+									<span aria-hidden="true">×</span>
+								</button>
+							</div>
+							<div class="toast-body">
+								{$m.message}
+							</div>
+						</div>
+					{/foreach}
+				</div>
+			</div>
+			{literal}
+				<script type="text/javascript">
+					$(function() {
+						$('.toast').toast('show');
+					});
+				</script>
+			{/literal}
+		{/if}
