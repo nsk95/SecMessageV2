@@ -33,6 +33,7 @@ class ComposerStaticInit040b19cc0203c9fd3ba6ef612f184363
             'Symfony\\Polyfill\\Intl\\Normalizer\\' => 33,
             'Symfony\\Polyfill\\Intl\\Grapheme\\' => 31,
             'Symfony\\Polyfill\\Iconv\\' => 23,
+            'SecMessage\\Utility\\' => 19,
             'SecMessage\\Model\\' => 17,
             'SecMessage\\Core\\' => 16,
             'SecMessage\\Controller\\' => 22,
@@ -90,6 +91,10 @@ class ComposerStaticInit040b19cc0203c9fd3ba6ef612f184363
         'Symfony\\Polyfill\\Iconv\\' => 
         array (
             0 => __DIR__ . '/..' . '/symfony/polyfill-iconv',
+        ),
+        'SecMessage\\Utility\\' => 
+        array (
+            0 => __DIR__ . '/../..' . '/utility',
         ),
         'SecMessage\\Model\\' => 
         array (

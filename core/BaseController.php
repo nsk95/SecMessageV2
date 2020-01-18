@@ -11,16 +11,13 @@ class BaseController
 
     private $messages       = null;
 
-    private $smarty         = null;
-    private $render         = true;
-    private $js             = array();
-    private $css            = array();
-    private $jsUrl          = array();
-    private $cssUrl         = array();
+    private $show           = true;
+
+    private $render         = null;
 
     public function __construct(Request $requestHandler)
     {
-        $this->initSmarty();
+        $this->render   = Render::getInstance();
         $this->request  = $requestHandler;
         $this->params   = $this->request->getRouteParams();
         $this->messages = SystemMessages::getInstance();
@@ -31,24 +28,20 @@ class BaseController
         if(method_exists($this, $methodName = ucfirst($this->params['action']).'Action'))
         {
             $this->$methodName();
-            if($this->render)
+            if($this->show)
             {
                 try 
                 {
                     $this->setJs();
                     $this->setCss();
-                    $this->smarty->assign('js', $this->js);
-                    $this->smarty->assign('jsUrl', $this->jsUrl);
-                    $this->smarty->assign('css', $this->css);
-                    $this->smarty->assign('cssUrl', $this->cssUrl);
-                    $this->smarty->assign('messages', $this->messages->getMessages());
-                    $this->smarty->display($this->params['controller'].'/'.$this->params['action'].'.tpl');
+                    $this->render->renderTemplate($this->params['controller'].'/'.$this->params['action']);
                 } 
                 catch (\Throwable $th) 
                 {
                     throw new \Exception('Template missing - Could not find template', 400, $th);
                 }
             }
+            $this->render->render();
         }
         else
         {
@@ -66,57 +59,13 @@ class BaseController
     }
 
     /**
-     * Set the value of render
+     * Set the value of show
      *
      * @return  void
      */ 
-    public function setRender($render) :void
+    public function setShow($show) :void
     {
-        $this->render = $render;
-    }
-
-    /**
-     * Undocumented function
-     *
-     * @param string $data
-     * @return void
-     */
-    protected function setAdditionalJsString(string $data) :void
-    {
-        $this->js[] = trim($data);
-    }
-
-    /**
-     * Undocumented function
-     *
-     * @param string $data
-     * @return void
-     */
-    protected function setAdditionalCssString(string $data) :void
-    {
-        $this->css[] = trim($data);
-    }
-
-    /**
-     * Undocumented function
-     *
-     * @param string $url
-     * @return void
-     */
-    protected function setAdditionalJsUrl(string $url) :void
-    {
-        $this->jsUrl[] = $url;
-    }
-
-    /**
-     * Undocumented function
-     *
-     * @param string $url
-     * @return void
-     */
-    protected function setAdditionalCssUrl(string $url) :void
-    {
-        $this->cssUrl[] = $url;
+        $this->show = $show;
     }
 
     /**
@@ -146,7 +95,7 @@ class BaseController
             $fgc = file_get_contents($jsPath);
             if($fgc !== false)
             {
-                $this->js[] = $fgc;
+                $this->render->setAdditionalJsString($fgc);
             }
         }
     }
@@ -163,22 +112,9 @@ class BaseController
             $fgc = file_get_contents($cssPath);
             if($fgc !== false)
             {
-                $this->css[] = $fgc;
+                $this->render->setAdditionalCssString($fgc);
             }
         }
-    }
-
-    /**
-     * Undocumented function
-     *
-     * @return void
-     */
-    private function initSmarty() :void
-    {
-        $smarty = new \Smarty();
-        $smarty->template_dir = __DIR__.'/../templates';
-        $smarty->compile_dir = __DIR__.'/../tmp';
-        $this->smarty = $smarty;
     }
 
     /**
@@ -187,5 +123,13 @@ class BaseController
     public function systemMessages()
     {
         return $this->messages;
+    }
+
+    /**
+     * Get the value of render
+     */ 
+    public function getRender()
+    {
+        return $this->render;
     }
 }

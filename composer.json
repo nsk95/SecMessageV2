@@ -14,7 +14,8 @@
             "SecMessage\\": ["", "/public"],
             "SecMessage\\Core\\": "core/",
             "SecMessage\\Controller\\": "controller/",
-            "SecMessage\\Model\\": "model/"
+            "SecMessage\\Model\\": "model/",
+            "SecMessage\\Utility\\": "utility/"
         }
     },
     "license": "MIT",
@@ -23,5 +24,7 @@
             "name": "Spyro",
             "email": "ifdmmib@gmail.com"
         }
-    ]
+    ],
+    "require-dev": {
+    }
 }

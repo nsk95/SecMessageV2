@@ -4,7 +4,7 @@ namespace SecMessage\Core;
 
 class SystemMessages
 {
-    private static $instance           = null;
+    private static $instance    = null;
     private $a_messages         = array();
     private $a_allowed_types    = array(
         'success',

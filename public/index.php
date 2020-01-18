@@ -1,6 +1,13 @@
 <?php
-
 namespace SecMessage;
+
+header('X-Frame-Options: Deny');
+header("X-XSS-Protection: 1; mode=block");
+header("X-Content-Type-Options: nosniff");
+header("Strict-Transport-Security: max-age=31536000");
+header("Content-Security-Policy: default-src 'none'; script-src 'self' 'unsafe-inline' https://*.bootstrapcdn.com https://*.jquery.com https://*.jsdelivr.net https://cdnjs.cloudflare.com; connect-src 'self'; img-src 'self' https://*.bootstrapcdn.com; style-src 'self' 'unsafe-inline' https://*.bootstrapcdn.com;");
+header("Referrer-Policy: origin-when-cross-origin");
+header("Expect-CT: max-age=7776000, enforce");
 
 if(!file_exists(($autoload = __DIR__.'/../vendor/autoload.php')))
 {

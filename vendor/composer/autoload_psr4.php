@@ -15,6 +15,7 @@ return array(
     'Symfony\\Polyfill\\Intl\\Normalizer\\' => array($vendorDir . '/symfony/polyfill-intl-normalizer'),
     'Symfony\\Polyfill\\Intl\\Grapheme\\' => array($vendorDir . '/symfony/polyfill-intl-grapheme'),
     'Symfony\\Polyfill\\Iconv\\' => array($vendorDir . '/symfony/polyfill-iconv'),
+    'SecMessage\\Utility\\' => array($baseDir . '/utility'),
     'SecMessage\\Model\\' => array($baseDir . '/model'),
     'SecMessage\\Core\\' => array($baseDir . '/core'),
     'SecMessage\\Controller\\' => array($baseDir . '/controller'),
