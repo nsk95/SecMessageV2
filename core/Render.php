@@ -10,6 +10,7 @@ class Render
     private $css                    = array();
     private $jsUrl                  = array();
     private $cssUrl                 = array();
+    private $templates              = array();
 
     protected function __construct() 
     {
@@ -76,19 +77,27 @@ class Render
         return $this;
     }
 
-    public function render() :self
+    public function doRender() :self
     {
         $this->smarty->assign('js', $this->js);
         $this->smarty->assign('jsUrl', $this->jsUrl);
         $this->smarty->assign('css', $this->css);
         $this->smarty->assign('cssUrl', $this->cssUrl);
         $this->smarty->assign('messages', SystemMessages::getInstance()->getMessages());
+
+        if(!empty($this->templates))
+        {
+            foreach($this->templates as $template)
+            {
+                $this->smarty->display($template);
+            }
+        }
         return $this;
     }
 
-    public function renderTemplate(string $templatePath) :self
+    public function addTemplate(string $templatePath) :self
     {
-        $this->smarty->display($templatePath.'.tpl');
+        $this->templates[] = $templatePath.'.tpl';
         return $this;
     }
 

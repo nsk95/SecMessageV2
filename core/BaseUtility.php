@@ -14,7 +14,7 @@ class BaseUtility
         $this->messages = \SecMessage\Core\SystemMessages::getInstance();
     }
 
-    public function getInstance() :self
+    final public function getInstance() :self
     {
         static $instances   = array();
         $calledClass        = get_called_class();

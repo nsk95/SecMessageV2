@@ -2,24 +2,11 @@
 
 namespace SecMessage\Core;
 
-use Exception;
+use \RedBeanPHP\R as R;
 
 class DbConnector 
 {
     protected $em = null;
-
-    public function __construct()
-    {
-        try 
-        {
-            require __DIR__.'/ext/rb.php';
-        }
-        catch (\Throwable $th)
-        {
-            throw new Exception('RB failed - Could not load rb.', 400, $th);
-        }
-        $this->setEm();
-    }
 
     /**
      * Get the value of em
@@ -38,8 +25,8 @@ class DbConnector
         if($this->em == null)
         {
             $config = ConfigReader::getConfig('main', 'o'); 
-            \R::setup('mysql:host='.$config->db->host.';dbname='.$config->db->name, $config->db->user, $config->db->pass);
-            $this->em = new \R();
+            R::setup('mysql:host='.$config->db->host.';dbname='.$config->db->name, $config->db->user, $config->db->pass);
+            $this->em = new R();
         }
     }
 }

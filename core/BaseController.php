@@ -34,14 +34,14 @@ class BaseController
                 {
                     $this->setJs();
                     $this->setCss();
-                    $this->render->renderTemplate($this->params['controller'].'/'.$this->params['action']);
+                    $this->render->addTemplate($this->params['controller'].'/'.$this->params['action']);
+                    $this->render->doRender();
                 } 
                 catch (\Throwable $th) 
                 {
                     throw new \Exception('Template missing - Could not find template', 400, $th);
                 }
             }
-            $this->render->render();
         }
         else
         {

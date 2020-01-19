@@ -41,7 +41,7 @@ $( document ).ready(function() {
         formData.pass = resultRC;
         var data = JSON.stringify(formData);
         $.ajax({
-                url: "proceed/create/",
+                url: "/message/create/",
                 data: {
                     data: data,
                 },
