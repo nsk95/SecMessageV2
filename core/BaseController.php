@@ -77,7 +77,7 @@ class BaseController
     {
         if($this->em == null)
         {
-            $dbCon = new DbConnector();
+            $dbCon = DbConnector::getInstance();
             $this->em = $dbCon->getEm();
         }
         return $this->em;

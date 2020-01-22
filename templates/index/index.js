@@ -1,5 +1,60 @@
-$( document ).ready(function() {
-    $( "#sbtbtn" ).on( "click", function( event ) {
+$( document ).ready(function() 
+{
+    var isAdvancedUpload = function() 
+    {
+        var div = document.createElement('div');
+        return (('draggable' in div) || ('ondragstart' in div && 'ondrop' in div)) && 'FormData' in window && 'FileReader' in window;
+    }();
+
+    var $form = $('.box');
+
+    if(isAdvancedUpload) 
+    {
+        $form.addClass('has-advanced-upload');
+    }
+
+    if (isAdvancedUpload) {
+
+        var droppedFiles = false;
+      
+        $form.on('drag dragstart dragend dragover dragenter dragleave drop', function(e) {
+          e.preventDefault();
+          e.stopPropagation();
+        })
+        .on('dragover dragenter', function() {
+          $form.addClass('is-dragover');
+        })
+        .on('dragleave dragend drop', function() {
+          $form.removeClass('is-dragover');
+        })
+        .on('drop', function(e) {
+          droppedFiles = e.originalEvent.dataTransfer.files;
+        });
+      
+    }
+
+    var $input    = $form.find('input[type="file"]'),
+    $label    = $form.find('#label_file'),
+    showFiles = function(files) {
+      $label.text(files.length > 1 ? ($input.attr('data-multiple-caption') || '').replace( '{count}', files.length ) : files[ 0 ].name);
+    };
+
+// ...
+
+    $input.on('drop', function(e) {
+    droppedFiles = e.originalEvent.dataTransfer.files; // the files that were dropped
+    showFiles( droppedFiles );
+    });
+
+    //...
+
+    $input.on('change', function(e) {
+    showFiles(e.target.files);
+    });
+
+
+    $( "#sbtbtn" ).on( "click", function( event ) 
+    {
         event.preventDefault();
         var formData = { };
         $.each($( '#newMessageForm' ).serializeArray(), function() {
