@@ -14,16 +14,17 @@
 								</div>
 							</div>
 						</div>
-						<div class="form-group box">
+						<div class="form-group">
 							<div class="col-xs-12">
 								<div class="row">
-									<div class="box__input">
-										<input class="box__file" type="file" name="files[]" id="file"/>
-										<label for="file" id="label_file"><strong>Choose a file</strong><span class="box__dragndrop"> or drag it here</span>.</label>
-									</div>
-									<div class="box__uploading">Uploading&hellip;</div>
-									<div class="box__success">Done!</div>
-									<div class="box__error">Error! <span></span>.</div>
+									<label for="file" class="col-sm-3">File:</label>
+									{* <div class="container" > *}
+										<input class="form-control col-sm-9" type="file" name="file[]" id="file">
+										
+										<!-- Drag and Drop container-->
+										<div class="upload-area"  id="uploadfile">
+											<h1 id="file_h1">Drag and Drop file here<br/>Or<br/>Click to select file</h1>
+										</div>
 								</div>
 							</div>
 						</div>

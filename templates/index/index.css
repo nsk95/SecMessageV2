@@ -1,27 +1,37 @@
-.box__dragndrop,
-.box__uploading,
-.box__success,
-.box__error {
-  display: none;
+.upload-area{
+    width: 75%;
+    border: 2px solid #d929ee;
+    border-radius: 3px;
+    text-align: center;
+    overflow: auto;
 }
 
-.box.has-advanced-upload {
-    background-color: white;
-    outline: 2px dashed black;
-    outline-offset: -10px;
-}
-.box.has-advanced-upload .box__dragndrop {
-    display: inline;
+.upload-area:hover{
+    cursor: pointer;
 }
 
-.box.is-dragover {
-    background-color: grey;
+.upload-area h1{
+    text-align: center;
+    font-weight: normal;
+    font-family: sans-serif;
+    line-height: 50px;
+    color: darkslategray;
 }
 
-.box.is-uploading .box__input {
-    visibility: none;
+#file{
+    display: none;
 }
 
-.box.is-uploading .box__uploading {
-    display: block;
+/* Thumbnail */
+.thumbnail{
+    width: 80px;
+    height: 80px;
+    padding: 2px;
+    border: 2px solid lightgray;
+    border-radius: 3px;
+    float: left;
+}
+
+.size{
+    font-size:12px;
 }

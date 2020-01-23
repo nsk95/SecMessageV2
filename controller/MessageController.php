@@ -10,6 +10,11 @@ class MessageController extends \SecMessage\Core\BaseController
         $this->setShow(false);
 
         $post   = $this->getRequest()->getPost();
+        $utility = \SecMessage\Utility\DefaultUtility::getInstance();
+        \SecMessage\Utility\DefaultUtility::debug($_POST);
+        \SecMessage\Utility\DefaultUtility::debug($this->getRequest());
+        \SecMessage\Utility\DefaultUtility::debug($_FILES);
+        die();
         $config = \SecMessage\Core\ConfigReader::getConfig('main', 'o');
         
         if(!empty($post) && isset($post['data']))

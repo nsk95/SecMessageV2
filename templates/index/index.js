@@ -1,77 +1,82 @@
 $( document ).ready(function() 
 {
-    var isAdvancedUpload = function() 
-    {
-        var div = document.createElement('div');
-        return (('draggable' in div) || ('ondragstart' in div && 'ondrop' in div)) && 'FormData' in window && 'FileReader' in window;
-    }();
-
-    var $form = $('.box');
-
-    if(isAdvancedUpload) 
-    {
-        $form.addClass('has-advanced-upload');
-    }
-
-    if (isAdvancedUpload) {
-
-        var droppedFiles = false;
-      
-        $form.on('drag dragstart dragend dragover dragenter dragleave drop', function(e) {
-          e.preventDefault();
-          e.stopPropagation();
-        })
-        .on('dragover dragenter', function() {
-          $form.addClass('is-dragover');
-        })
-        .on('dragleave dragend drop', function() {
-          $form.removeClass('is-dragover');
-        })
-        .on('drop', function(e) {
-          droppedFiles = e.originalEvent.dataTransfer.files;
-        });
-      
-    }
-
-    var $input    = $form.find('input[type="file"]'),
-    $label    = $form.find('#label_file'),
-    showFiles = function(files) {
-      $label.text(files.length > 1 ? ($input.attr('data-multiple-caption') || '').replace( '{count}', files.length ) : files[ 0 ].name);
-    };
-
-// ...
-
-    $input.on('drop', function(e) {
-    droppedFiles = e.originalEvent.dataTransfer.files; // the files that were dropped
-    showFiles( droppedFiles );
+        // preventing page from redirecting
+    $("html").on("dragover", function(e) {
+        e.preventDefault();
+        e.stopPropagation();
+        $("#file_h1").text("Drag here");
     });
 
-    //...
+    $("html").on("drop", function(e) { e.preventDefault(); e.stopPropagation(); });
 
-    $input.on('change', function(e) {
-    showFiles(e.target.files);
+    $("html").on("drop", function(e) { e.preventDefault(); e.stopPropagation(); });
+
+    // Drag enter
+    $('.upload-area').on('dragenter', function (e) {
+        e.stopPropagation();
+        e.preventDefault();
+        $("#file_h1").text("Drop");
     });
 
+    // Drag over
+    $('.upload-area').on('dragover', function (e) {
+        e.stopPropagation();
+        e.preventDefault();
+        $("#file_h1").text("Drop");
+    });
+
+    // Drop
+    $('.upload-area').on('drop', function (e) {
+        e.stopPropagation();
+        e.preventDefault();
+
+        $("#file_h1").text("Upload");
+
+        var file = e.originalEvent.dataTransfer.files;
+        var fd = new FormData($('#newMessageForm'));
+
+        fd.append('file', file[0]);
+
+        uploadData(fd);
+    });
+
+    // Open file selector on div click
+    $("#uploadfile").click(function(){
+        $("#file").click();
+    });
+
+    // file selected
+    $("#file").change(function(){
+        var fd = new FormData();
+
+        var file = $('#file')[0].files[0];
+
+        $('#uploadfile').files = file;
+
+        // fd.append('file',files);
+
+        // uploadData(fd);
+    });
 
     $( "#sbtbtn" ).on( "click", function( event ) 
     {
+        var form = $('form');
+        var fd = new FormData(form[0]);
+        
         event.preventDefault();
-        var formData = { };
-        $.each($( '#newMessageForm' ).serializeArray(), function() {
-            formData[this.name] = this.value;
-        });
 
-        if(formData.pass1 != "")
+        if(fd.get('pass1') != "")
         {
-            if(formData.pass1 != formData.pass2)
+            if(fd.get('pass1') != fd.get('pass2'))
             {
                 alert('Passwords does not match.');
                 return;
             }
-            else{
-                formData.hashedPass = (CryptoJS.SHA512(formData.pass1).toString()).toUpperCase();
-                delete formData.pass1;
-                delete formData.pass2;
+            else
+            {
+                fd.set('hashedPass', (CryptoJS.SHA512(fd.get('pass1')).toString()).toUpperCase()) 
+                fd.delete('pass1');
+                fd.delete('pass2');
             }
         }
 
@@ -82,25 +87,37 @@ $( document ).ready(function()
         {
             resultRP += pool.charAt(Math.floor(Math.random() * poolLength));
         }
-        if(formData.hashedPass != undefined)
+        if(fd.get('hashedPass') != undefined)
         {
-            var resultRC = resultRP + formData.hashedPass;
+            var resultRC = resultRP + fd.get('hashedPass');
         }
         else
         {
             var resultRC = resultRP;
         }
 
-        formData.cryptedMessage = CryptoJS.AES.encrypt(formData.message, resultRC).toString();
-        delete formData.message;
-        formData.pass = resultRC;
-        var data = JSON.stringify(formData);
+        if(fd.get('file'))
+        {
+            
+
+        }
+        
+
+        fd.set('cryptedMessage', CryptoJS.AES.encrypt(fd.get('message'), resultRC).toString());
+        fd.delete('message');
+        fd.set('pass', resultRC);
+
+        var data = JSON.stringify(Object.fromEntries(fd))
+        console.log(fd);
+        fd.delete('file');
         $.ajax({
                 url: "/message/create/",
                 data: {
                     data: data,
                 },
-                type: 'post',
+                type: 'POST',
+                contentType: false, // NEEDED, DON'T OMIT THIS (requires jQuery 1.6+)
+                // processData: false, // NEEDED, DON'T OMIT THIS
                 success: function(result) {
                     result = JSON.parse(result);
                     if(result.success == true)
