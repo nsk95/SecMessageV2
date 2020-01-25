@@ -25,9 +25,9 @@ class CryptUtility extends \SecMessage\Core\BaseUtility
      * @param string $cryptedMessage
      * @return string|null
      */
-    public function decryptMessage(string $cryptedMessage) :?string
+    public function decryptMessage(string $cryptedMessage, $key) :?string
     {
-        if(empty($cryptedMessage))
+        if(empty($cryptedMessage) || empty($key))
         {
             return null;
         }
@@ -43,7 +43,7 @@ class CryptUtility extends \SecMessage\Core\BaseUtility
         {
             return null;
         }
-        $key = openssl_digest($this->config->sys->key, $this->config->crypt->digest, true);
+        $key = openssl_digest($key, $this->config->crypt->digest, true);
 
         if(false !== ($decrypted = openssl_decrypt($cryptedMessage, $this->config->crypt->method, $key, 0, hex2bin($iv))))
         {
@@ -58,9 +58,9 @@ class CryptUtility extends \SecMessage\Core\BaseUtility
      * @param string $message
      * @return string|null
      */
-    public function encryptMessage(string $message) :?string
+    public function encryptMessage(string $message, $key) :?string
     {
-        if(empty($message))
+        if(empty($message) || empty($key))
         {
             return null;
         }
@@ -68,7 +68,7 @@ class CryptUtility extends \SecMessage\Core\BaseUtility
         if(in_array($this->config->crypt->method, openssl_get_cipher_methods()))
         {
             $iv     = openssl_random_pseudo_bytes(openssl_cipher_iv_length($this->config->crypt->method));
-            $key    = openssl_digest($this->config->sys->key, $this->config->crypt->digest, true);
+            $key    = openssl_digest($key, $this->config->crypt->digest, true);
 
             if(strpos($message, '::'))
             {

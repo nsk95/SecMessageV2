@@ -59,7 +59,7 @@
 							<div class="col-xs-12">
 								<div class="row">
 									<label for="sbtbtn" class="col-sm-3"></label>
-									<button class="btn btn-primary col-sm-9" id="sbtbtn">Submit</button>
+									<button type ="submit" class="btn btn-primary col-sm-9" id="sbtbtn">Submit</button>
 								</div>
 							</div>
 						</div>

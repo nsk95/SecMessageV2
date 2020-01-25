@@ -9,8 +9,6 @@ $( document ).ready(function()
 
     $("html").on("drop", function(e) { e.preventDefault(); e.stopPropagation(); });
 
-    $("html").on("drop", function(e) { e.preventDefault(); e.stopPropagation(); });
-
     // Drag enter
     $('.upload-area').on('dragenter', function (e) {
         e.stopPropagation();
@@ -40,52 +38,36 @@ $( document ).ready(function()
         uploadData(fd);
     });
 
-    // Open file selector on div click
-    $("#uploadfile").click(function(){
+    
+    $("#uploadfile").click(function()
+    {
         $("#file").click();
     });
 
-    // file selected
-    $("#file").change(function(){
-        var fd = new FormData();
 
-        var file = $('#file')[0].files[0];
-
-        $('#uploadfile').files = file;
-
-        // fd.append('file',files);
-
-        // uploadData(fd);
-    });
-
-    $( "#sbtbtn" ).on( "click", function( event ) 
+    $('form#newMessageForm').on('submit', function(e)
     {
-        var form = $('form');
-        var fd = new FormData(form[0]);
-        
-        event.preventDefault();
-
-        if(fd.get('pass1') != "")
+        e.preventDefault();
+        if(!validateForm(this))
         {
-            if(fd.get('pass1') != fd.get('pass2'))
-            {
-                alert('Passwords does not match.');
-                return;
-            }
-            else
-            {
-                fd.set('hashedPass', (CryptoJS.SHA512(fd.get('pass1')).toString()).toUpperCase()) 
-                fd.delete('pass1');
-                fd.delete('pass2');
-            }
+            return;
         }
+        $('#sbtbtn').prop('disabled', true);
+        
+        var fd = new FormData(this);
+        
+        if(fd.get('pass1') != '')
+        {
+            fd.set('hashedPass', (CryptoJS.SHA512(fd.get('pass1')).toString()).toUpperCase()) 
+        }
+        fd.delete('pass1');
+        fd.delete('pass2');
 
         var resultRP = '';
         var pool = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789#!';
-        var poolLength = pool.length;
         for( var i = 0; i < 16; i++)
         {
-            resultRP += pool.charAt(Math.floor(Math.random() * poolLength));
+            resultRP += pool.charAt(Math.floor(Math.random() * pool.length));
         }
         if(fd.get('hashedPass') != undefined)
         {
@@ -95,41 +77,48 @@ $( document ).ready(function()
         {
             var resultRC = resultRP;
         }
-
-        if(fd.get('file'))
-        {
-            
-
-        }
-        
-
         fd.set('cryptedMessage', CryptoJS.AES.encrypt(fd.get('message'), resultRC).toString());
         fd.delete('message');
         fd.set('pass', resultRC);
-
-        var data = JSON.stringify(Object.fromEntries(fd))
-        console.log(fd);
-        fd.delete('file');
-        $.ajax({
-                url: "/message/create/",
-                data: {
-                    data: data,
-                },
-                type: 'POST',
-                contentType: false, // NEEDED, DON'T OMIT THIS (requires jQuery 1.6+)
-                // processData: false, // NEEDED, DON'T OMIT THIS
-                success: function(result) {
-                    result = JSON.parse(result);
-                    if(result.success == true)
-                    {
-                        $('#mainbox').html(result.append);
-                    }
-                    else
-                    {
-                        $('#placeholder').html(result.append);
-                    } 
-                } 
-            });
         
-      });
+        $.ajax({
+            url: "/message/create/",
+            data: fd,
+            type: 'POST',
+            enctype: 'multipart/form-data',
+            contentType: false, 
+            processData: false, 
+            cache: false,
+            success: function(result) 
+            {
+                result = JSON.parse(result);
+                if(result.success == true)
+                {
+                    $('#mainbox').html(result.append);
+                }
+                else
+                {
+                    $('#placeholder').html(result.append);
+                } 
+            } 
+        });
+    });
+
+    function validateForm(form)
+    {
+        if(form.message.value == '')
+        {
+            alert('Message cannot be empty');
+            return false;
+        }
+        else if(form.pass1.value != '' && form.pass1.value != form.pass2.value)
+        {
+            alert('Passwords do not match');
+            return false;
+        }
+        else
+        {
+            return true;
+        }
+    };
 });

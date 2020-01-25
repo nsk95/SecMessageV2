@@ -105,4 +105,9 @@ class Render
     {
         return $this->smarty->fetch($templatePath.'.tpl');
     }
+
+    public function assign($key, $val) :void
+    {
+        $this->smarty->assign($key, $val);
+    }
 }

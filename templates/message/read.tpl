@@ -6,22 +6,26 @@
 				{if $textPanel != ''}
                 <div class="row justify-content-center">
                     <div class="alert alert-danger" role="alert"><strong>Notice:</strong> {$textPanel}</div>
-                    {if $passRequired}
+                    {if !$noForm}
+                </div>
+                    <div class="row justify-content-center">
                         <form id="passform" method="post">
+                            {if $passRequired}
                             <div class="form-group">
                                 <label for="pass">Password:</label>
                                 <input type="password" class="form-control" id="pass" name="pass" placeholder="">
                             </div>
-                            <button type="submit" class="btn btn-primary">Submit</button>
+                            {/if}
+                            <div class="form-group">
+                                <div class="col-xs-12">
+                                    <div class="row">
+                                        <button type="submit" class="btn btn-primary col-sm-12">Read message</button>
+                                    </div>
+                                </div>
+                            </div>
                         </form>
                     {/if}
                 </div>
-                {/if}
-                {if !$messageRead}
-                    <div class="row">
-                        <label class="col-sm-3" for="message">Message:</label>
-                        <textarea class="form-control col-sm-9" id="message" rows="10">{if $decryptedMessage}{$decryptedMessage}{/if}</textarea>
-                    </div>
                 {/if}
 				</div>
 			</div>

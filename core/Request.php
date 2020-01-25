@@ -8,15 +8,18 @@ class Request
     private $get            = null;
     private $post           = null;
     private $route_params   = null;
+    private $additional     = null;
     private $data           = null;
     private $xss            = null;
+
     public function __construct($route_params)
     {
         $this->xss = new AntiXSS();
         
         $this->data['post']         = (!empty($_POST) ? ($this->post = $this->cleanXss($_POST)) : array()); 
         $this->data['get']          = (!empty($_GET) ? ($this->get = $this->cleanXss($_GET)) : array()); 
-        $this->data['route_params'] = (!empty($route_params) ? ($this->route_params = $this->cleanXss($route_params)) : array()); 
+        $this->data['route_params'] = (!empty($route_params) ? ($this->route_params = $this->cleanXss($route_params)) : array());
+        $this->data['additional']   = (!empty($route_params['additional']) ? ($this->additional = $this->cleanXss($route_params['additional'])) : array());
     }
 
     /**
@@ -57,12 +60,17 @@ class Request
      * @param mixed $data
      * @return array
      */
-    private function cleanXss($data) :array
+    private function cleanXss($data) 
     {
-        $a_return = array();
-
+        if(is_object($data))
+        {
+            $data = (array)$data;
+        }
+        
         if(is_array($data))
         {
+            $a_return = array();
+
             foreach($data as $key => $value)
             {
                 if(is_array($value))
@@ -74,16 +82,25 @@ class Request
                     $a_return[$this->xss->xss_clean($key)] = $this->xss->xss_clean($value);
                 }
             }
+            $ret = $a_return;
         }
         else
         {
-            $a_return[$this->xss->xss_clean($key)] = $this->xss->xss_clean($value);
+            $ret = $this->xss->xss_clean($data);
         }
 
         if($this->xss->isXssFound() === true)
         {
             SystemMessages::getInstance()->setMessage('warning', 'XSS detection', 'xss attack detected.');
         }
-        return $a_return;
+        return $ret;
+    }
+
+    /**
+     * Get the value of additional
+     */ 
+    public function getAdditional()
+    {
+        return $this->additional;
     }
 }
