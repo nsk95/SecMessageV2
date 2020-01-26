@@ -33,7 +33,23 @@ $( document ).ready(function()
             var resultRC = resultRP;
         }
 
+        var file = fd.get('file[]');
+        if(file.name != '' && file.size != 0)
+        {
+            var reader = new FileReader();
+            var content = '';
 
+            reader.readAsText(file);
+            reader.onload = function(e) {
+                content = reader.result;
+            //set here        
+            }
+        
+            
+            
+        }
+       
+        console.log(fd.get('file[]'));return;
 
         fd.set('cryptedMessage', CryptoJS.AES.encrypt(fd.get('message'), resultRC).toString());
         fd.delete('message');

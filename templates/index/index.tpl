@@ -22,7 +22,7 @@
 									<div class="col-xs-12">
 										<div class="row">
 											<label for="file" class="form-control col-sm-3">File:</label>
-											<input class="form-control col-sm-9" type="file" name="file[]" id="file">
+											<input class="form-control form-control-file col-sm-9" type="file" name="file[]" id="file">
 										</div>
 									</div>
 								</div>
