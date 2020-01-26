@@ -1,50 +1,5 @@
 $( document ).ready(function() 
 {
-        // preventing page from redirecting
-    $("html").on("dragover", function(e) {
-        e.preventDefault();
-        e.stopPropagation();
-        $("#file_h1").text("Drag here");
-    });
-
-    $("html").on("drop", function(e) { e.preventDefault(); e.stopPropagation(); });
-
-    // Drag enter
-    $('.upload-area').on('dragenter', function (e) {
-        e.stopPropagation();
-        e.preventDefault();
-        $("#file_h1").text("Drop");
-    });
-
-    // Drag over
-    $('.upload-area').on('dragover', function (e) {
-        e.stopPropagation();
-        e.preventDefault();
-        $("#file_h1").text("Drop");
-    });
-
-    // Drop
-    $('.upload-area').on('drop', function (e) {
-        e.stopPropagation();
-        e.preventDefault();
-
-        $("#file_h1").text("Upload");
-
-        var file = e.originalEvent.dataTransfer.files;
-        var fd = new FormData($('#newMessageForm'));
-
-        fd.append('file', file[0]);
-
-        uploadData(fd);
-    });
-
-    
-    $("#uploadfile").click(function()
-    {
-        $("#file").click();
-    });
-
-
     $('form#newMessageForm').on('submit', function(e)
     {
         e.preventDefault();
@@ -69,7 +24,7 @@ $( document ).ready(function()
         {
             resultRP += pool.charAt(Math.floor(Math.random() * pool.length));
         }
-        if(fd.get('hashedPass') != undefined)
+        if(fd.has('hashedPass'))
         {
             var resultRC = resultRP + fd.get('hashedPass');
         }
@@ -77,6 +32,9 @@ $( document ).ready(function()
         {
             var resultRC = resultRP;
         }
+
+
+
         fd.set('cryptedMessage', CryptoJS.AES.encrypt(fd.get('message'), resultRC).toString());
         fd.delete('message');
         fd.set('pass', resultRC);

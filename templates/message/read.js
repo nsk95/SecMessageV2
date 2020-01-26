@@ -1,8 +1,12 @@
-$( document ).ready(function() {
-   var cryptedMessage = $("#message");
-   var pass = $("#pass");
-   if(cryptedMessage != '')
+$( document ).ready(function() 
+{
+    $('form#passform').on('submit', function(e)
     {
-       $("#message").text(CryptoJS.AES.decrypt(cryptedMessage, pass).toString(CryptoJS.enc.Utf8));
-    }
+        $('#sbtbtn').prop('disabled', true);
+        
+        if(this.pass != undefined)
+        {
+            this.pass.value = (CryptoJS.SHA512(this.pass.value).toString()).toUpperCase();
+        }
+    });
 });
